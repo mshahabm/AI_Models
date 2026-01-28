@@ -1,4 +1,4 @@
-Purpose: Fall Risk Prediction Model that predicts whether a member will experience a fall in the next 1, 2, or 3 months using XGBoost classification.
+Purpose: Fall Risk Prediction Model that predicts whether a member will experience a fall in the next months in low, medium or high risk category with fall risk score using XGBoost classification.
 
 Data Source
 
