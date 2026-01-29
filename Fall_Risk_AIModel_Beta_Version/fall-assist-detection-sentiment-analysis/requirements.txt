@@ -1,0 +1,11 @@
+# Fall Detection & Sentiment Analysis System
+# Required Python packages
+
+# Core dependencies
+pandas>=1.3.0
+pyarrow>=6.0.0
+
+# Optional: For better CSV handling
+# openpyxl>=3.0.0  # If you need Excel support
+
+# Python version requirement: Python 3.7+
