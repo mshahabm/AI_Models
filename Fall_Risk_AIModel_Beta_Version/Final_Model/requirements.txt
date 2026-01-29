@@ -1,0 +1,31 @@
+# Fall Risk Forecasting Model - Beta Version
+# Required Python packages
+
+# Core dependencies
+pandas>=1.3.0
+numpy>=1.21.0
+pyarrow>=6.0.0          # For Parquet file support
+
+# Machine Learning
+scikit-learn>=1.0.0     # RandomForest, GradientBoosting, LogisticRegression, metrics
+xgboost>=1.5.0          # XGBoost classifier (default algorithm)
+
+# Imbalanced data handling
+imbalanced-learn>=0.9.0 # SMOTE oversampling
+
+# Visualization
+matplotlib>=3.3.0       # Plotting ROC curves, confusion matrices
+seaborn>=0.11.0        # Enhanced visualizations (optional but recommended)
+
+# Python version requirement: Python 3.7+
+
+# Installation Instructions:
+# -------------------------
+# Install all dependencies:
+#   pip install -r requirements.txt
+#
+# Or install individually:
+#   pip install pandas numpy pyarrow scikit-learn xgboost imbalanced-learn matplotlib seaborn
+#
+# Note: pyarrow is optional but highly recommended for Parquet file support
+#       seaborn is optional but recommended for better visualization quality
