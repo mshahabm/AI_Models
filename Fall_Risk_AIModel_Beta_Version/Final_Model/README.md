@@ -98,8 +98,6 @@ Steps_mean | Steps_median | Steps_divergence | Steps_Max
   - `er_dispatch_count_*`
   - `sentiment_*_count_*`
   - `fall_count_*` (target variable)
-
-**Optional Columns**:
 - `account_id`, `brand`, `health_plan`
 - `Steps_mean`, `Steps_median`, `Steps_divergence`, `Steps_Max`
 
@@ -111,8 +109,8 @@ account_number | account_id | Age | brand | health_plan |
 member name | care manager | Risk_Score | Risk_Category
 ```
 
-- `Risk_Score`: 1-10 scale (1=lowest, 10=highest)
-- `Risk_Category`: Low, Moderate, High
+- `Risk_Score`: 1-10 scale 
+- `Risk_Category`: Low (1-2), Moderate (3-6), High (7-10)
 
 ## ⚙️ Configuration
 
@@ -479,5 +477,6 @@ For questions or issues:
 5. **Threshold Tuning**: Adjust `optimal_threshold` based on intervention capacity
 
 ---
+
 
 
