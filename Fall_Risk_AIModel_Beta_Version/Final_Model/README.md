@@ -2,9 +2,8 @@
 
 A machine learning system for predicting fall risk in healthcare plan members using XGBoost and historical monitoring data. This model uses **true forecasting** - predicting next month's fall risk based on current month's behavioral patterns.
 
-> **✨ Optimized for GitHub**: Condensed to ~730 lines (from 1,600+) for easier code review while maintaining full functionality.
 
-## 🎯 Overview
+## Overview
 
 This forecasting model predicts which members are at risk of falling in the **next month** based on their **current month's** activity patterns, device usage, and health indicators.
 
@@ -12,19 +11,19 @@ This forecasting model predicts which members are at risk of falling in the **ne
 - **Month N features** → Predict **Month N+1 falls**
 - Example: April 2025 data → Predicts May 2025 fall risk
 
-## ✨ Features
+## Features
 
-- ✅ **True Forecasting**: Predict next month falls using current month data
-- ✅ **Automated Pipeline**: 25-step automated workflow for continuous model updates
-- ✅ **Multiple Algorithms**: XGBoost (default), RandomForest, GradientBoosting, LogisticRegression
-- ✅ **Dual Format Support**: CSV and Parquet files (automatic detection)
-- ✅ **Imbalanced Data Handling**: SMOTE oversampling + optimized class weights
-- ✅ **Feature Engineering**: 50+ engineered features from raw data
-- ✅ **Comprehensive Reporting**: ROC-AUC curves, confusion matrices, feature importance
-- ✅ **Production Ready**: Error handling, validation, detailed logging
-- ✅ **GitHub Optimized**: Condensed codebase (~730 lines) for easy review and maintenance
+**True Forecasting**: Predict next month falls using current month data
+**Automated Pipeline**: 25-step automated workflow for continuous model updates
+**Multiple Algorithms**: XGBoost (default), RandomForest, GradientBoosting, LogisticRegression
+**Dual Format Support**: CSV and Parquet files (automatic detection)
+**Imbalanced Data Handling**: SMOTE oversampling + optimized class weights
+**Feature Engineering**: 50+ engineered features from raw data
+**Comprehensive Reporting**: ROC-AUC curves, confusion matrices, feature importance
+**Production Ready**: Error handling, validation, detailed logging
+**GitHub Optimized**: Condensed codebase (~730 lines) for easy review and maintenance
 
-## 📊 What It Does
+## What It Does
 
 ### Input
 - **Training Data**: Historical monthly features (steps, alarms, assistance, sentiment, etc.)
@@ -42,7 +41,7 @@ This forecasting model predicts which members are at risk of falling in the **ne
 - **Recall**: Optimized to catch maximum falls (minimize false negatives)
 - **Precision**: Balanced to reduce unnecessary interventions
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -150,7 +149,7 @@ xgb.XGBClassifier(
 )
 ```
 
-## 🔄 Automated Workflow
+## Automated Workflow
 
 The script runs a **25-step automated pipeline**:
 
@@ -431,24 +430,24 @@ This implementation has been optimized for developer experience:
 - **GitHub-Friendly**: Easy to review in pull requests
 
 **What's Optimized**:
-- ✂️ Shorter, focused docstrings
-- 🔧 Consolidated helper functions
-- 📝 Removed verbose comments
-- 🎯 Tighter code structure
-- ⚡ More efficient patterns
+- Shorter, focused docstrings
+- Consolidated helper functions
+- Removed verbose comments
+- Tighter code structure
+- More efficient patterns
 
 **What's Preserved**:
-- ✅ All functionality intact
-- ✅ Same ML algorithms and parameters
-- ✅ Complete error handling
-- ✅ Full feature engineering
-- ✅ All reporting capabilities
+- All functionality intact
+- Same ML algorithms and parameters
+- Complete error handling
+- Full feature engineering
+- All reporting capabilities
 
 ## 📄 License
 
-MIT License - See LICENSE file for details
+ See LICENSE file for details
 
-## 📞 Support
+## Support
 
 For questions or issues:
 1. Check troubleshooting section above
@@ -481,8 +480,4 @@ For questions or issues:
 
 ---
 
-**Made with ❤️ for Healthcare Fall Prevention**
 
-## 🌟 Star This Repository
-
-If you find this tool helpful for fall risk prediction, please consider giving it a star! ⭐
