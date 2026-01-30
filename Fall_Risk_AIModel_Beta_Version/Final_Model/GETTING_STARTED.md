@@ -1,16 +1,15 @@
 # Getting Started - Fall Risk Forecasting Model (Beta Version)
 
-## 🎉 Welcome!
 
 You now have a production-ready **fall risk forecasting system** (Beta Version) that predicts which members will fall next month based on their current month's activity patterns.
 
-**What's New in Beta**:
+**What's in Beta Version Model**:
 - ✅ Updated folder naming: `FallRisk_BetaVersion_*`
 - ✅ Extended prediction period: May 2025 → February 2026 (10 months)
 - ✅ Progressive training updates with real monthly data
 - ✅ Streamlined code structure (~730 lines)
 
-## ⚡ Quick Start (3 Steps)
+## Quick Start (3 Steps)
 
 ### Step 1: Install Dependencies
 
