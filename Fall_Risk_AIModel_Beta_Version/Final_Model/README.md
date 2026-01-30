@@ -104,22 +104,6 @@ FallRisk_Training_112024_To_052025_Healthplans.CSV  (after May)
 
 ---
 
-## Utility Scripts
-
-| Script | Purpose | Usage |
-|--------|---------|-------|
-| **Extract_Monthly_Data.py** | Extract specific month from dataset | `python Extract_Monthly_Data.py` |
-| **realign_rows_columns.py** | Align data structure to reference file | `python realign_rows_columns.py` |
-| **Parquet_To_CSV.py** | Convert Parquet to CSV | `python Parquet_To_CSV.py` |
-| **Data_Transformation_Healthplans.py** | Transform raw data for model | `python Data_Transformation_Healthplans.py` |
-
-**realign_rows_columns.py** - Aligns January 2026 data to December 2025 structure:
-- Matches row sequence by `account_number` and `health_plan`
-- Keeps missing accounts with empty values
-- Saves new accounts separately
-
----
-
 ## Risk Score Interpretation
 
 **Scale**: 1-10 (calculated as `probability × 9 + 1`)
