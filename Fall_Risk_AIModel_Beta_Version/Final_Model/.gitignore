@@ -1,0 +1,74 @@
+# Data files - Healthcare data (HIPAA sensitive)
+*.parquet
+*.csv
+*.CSV
+*.xlsx
+*.xls
+
+# Training/test data files
+FallRisk_Training_*.CSV
+FallRisk_Training_*.parquet
+FallRisk_Test_*.CSV
+FallRisk_Test_*.csv
+FallRisk_Test_*.parquet
+
+# Model output directories - NEW NAMING
+FallRisk_BetaVersion_Predict_*/
+FallRisk_BetaVersion_Test_Including_*/
+FallRisk_BetaVersion_Training_*/
+FallRisk_NaN_Aware_*/
+
+# Legacy output directories
+FallRisk_Model*/
+*_Output/
+*_Predicting*/
+*_Test_Against*/
+
+# Model artifacts
+*.pkl
+*.pickle
+*.h5
+*.model
+*.joblib
+
+# Generated reports
+Fall_Risk_score_*.CSV
+Fall_Risk_score_*.parquet
+FeatureImportance*.txt
+CM_*.txt
+CM_*.png
+ROC_*.png
+Performance_*.txt
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints
+*.ipynb
+
+# Logs
+*.log
+logs/
+
+# Temp files
+*.tmp
+*.bak
+~$*
