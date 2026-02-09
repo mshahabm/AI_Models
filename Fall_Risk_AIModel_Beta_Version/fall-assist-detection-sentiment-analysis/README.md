@@ -69,11 +69,11 @@ The script generates 5 new flag columns placed **right after** the text column:
 
 | Column Name | Type | Description |
 |------------|------|-------------|
-| `fall_flag` | int | 1 if fall detected, 0 otherwise |
-| `assist_flag` | int | 1 if assistance provided, 0 otherwise |
-| `sentiment_positive_flag` | int | 1 if positive sentiment, 0 otherwise |
-| `sentiment_negative_flag` | int | 1 if negative sentiment, 0 otherwise |
-| `sentiment_neutral_flag` | int | 1 if neutral sentiment, 0 otherwise |
+| `fall_count` | int | 1 if fall detected, 0 otherwise |
+| `assist_count` | int | 1 if assistance provided, 0 otherwise |
+| `sentiment_positive_count` | int | 1 if positive sentiment, 0 otherwise |
+| `sentiment_negative_count` | int | 1 if negative sentiment, 0 otherwise |
+| `sentiment_neutral_count` | int | 1 if neutral sentiment, 0 otherwise |
 
 **Note**: Only one sentiment flag will be 1 per row (mutually exclusive).
 
@@ -169,11 +169,11 @@ CONFIG = {
     'output_csv': 'output.csv',
     
     # Output column names (Optional - Customize if needed)
-    'fall_flag_column': 'fall_flag',
-    'assist_flag_column': 'assist_flag',
-    'sentiment_positive_column': 'sentiment_positive_flag',
-    'sentiment_negative_column': 'sentiment_negative_flag',
-    'sentiment_neutral_column': 'sentiment_neutral_flag',
+    'fall_flag_column': 'fall_count',
+    'assist_flag_column': 'assist_count',
+    'sentiment_positive_column': 'sentiment_positive_count',
+    'sentiment_negative_column': 'sentiment_negative_count',
+    'sentiment_neutral_column': 'sentiment_neutral_count',
 }
 ```
 
@@ -213,7 +213,7 @@ account_number | alarm_path
 
 ### Output Data
 ```
-account_number | alarm_path                                       | fall_flag | assist_flag | sentiment_positive | sentiment_negative | sentiment_neutral
+account_number | alarm_path                                       | fall_count | assist_count | sentiment_positive_count | sentiment_negative_count | sentiment_neutral_count
 ---------------|--------------------------------------------------|-----------|-------------|-------------------|-------------------|------------------
 12345          | Member fell in bathroom, staff assisted...      | 1         | 1           | 0                 | 1                 | 0
 67890          | False alarm, testing device, no fall occurred   | 0         | 0           | 1                 | 0                 | 0
@@ -311,10 +311,10 @@ For detailed documentation of all detection patterns, see the inline comments in
 
 **Fall Detection**:
 ```
-✓ "Patient fell in bathroom"           → fall_flag = 1
-✓ "Found on floor, assisted up"        → fall_flag = 1, assist_flag = 1
-✗ "Almost fell but caught themselves"  → fall_flag = 0
-✗ "Fall prevention education provided" → fall_flag = 0
+✓ "Patient fell in bathroom"           → fall_count = 1
+✓ "Found on floor, assisted up"        → fall_count = 1, assist_count= 1
+✗ "Almost fell but caught themselves"  → fall_count = 0
+✗ "Fall prevention education provided" → fall_count = 0
 ```
 
 **Sentiment Analysis**:
