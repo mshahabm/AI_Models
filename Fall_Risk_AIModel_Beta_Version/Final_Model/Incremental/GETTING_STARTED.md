@@ -313,7 +313,7 @@ python csv_to_parquet.py FallRisk_Training_112024_To_042025_Healthplans.CSV
 # Every month when new test data arrives
 python FallRisk_Healthplans_Incremental.py --auto
 
-# Runtime: ~15-20 minutes
+# Runtime: ~2-5 minutes
 # Output: Current month predictions with evaluation
 ```
 
@@ -322,7 +322,7 @@ python FallRisk_Healthplans_Incremental.py --auto
 # When you have multiple months of test data to process
 python FallRisk_Healthplans_Incremental.py --auto
 
-# Runtime: ~15-20 min per month
+# Runtime: ~2-5 min per month
 # Output: All available months processed sequentially
 ```
 
@@ -331,7 +331,7 @@ python FallRisk_Healthplans_Incremental.py --auto
 # When test data not yet available
 python FallRisk_Healthplans_Incremental.py --auto
 
-# Runtime: ~10-15 minutes
+# Runtime: ~2-5 minutes
 # Output: Predictions only, no evaluation
 # Message: "Waiting for test file..."
 ```
@@ -341,10 +341,9 @@ python FallRisk_Healthplans_Incremental.py --auto
 # When you need control over specific month
 python FallRisk_Healthplans_Incremental.py --predict_month 07_2025 --training_file FallRisk_Training_112024_To_062025_Healthplans
 
-# Runtime: ~15 minutes
+# Runtime: ~2-5 minutes
 # Output: July predictions
 ```
-
 ---
 
 ## Troubleshooting
@@ -397,7 +396,7 @@ Action: This is normal! Wait for test data, place in directory, re-run --auto
 
 ### Optimization Tips
 - **Use Parquet format** for 5x speed boost
-- **Run off-peak hours** (10-20 min per month)
+- **Run off-peak hours** (5 min per month)
 - **Schedule monthly** (first week after test data arrival)
 - **Archive outputs** for audit trail
 - **Monitor QA markers** in console
@@ -485,9 +484,6 @@ A: Check console for these markers:
 ### Risk Scoring
 - **Risk Score**: 1-10 (relative to threshold)
 - **Risk Category**: Low (1-2), Moderate (3-6), High (7-10)
-- **Flagged**: Probability ≥ optimized threshold
-- **Data Quality**: % of non-missing features
-
 ---
 
 ## Output Details
@@ -511,19 +507,6 @@ A: Check console for these markers:
 - `ROC_Test.png`: Real-world ROC
 - `CM_Test.png/txt`: Real-world confusion matrix
 - `Performance_Test.txt`: Real-world metrics
-
----
-
-## Expected Runtime
-
-| Scenario | Runtime |
-|----------|---------|
-| 1 month (prediction only) | ~10-15 min |
-| 1 month (with evaluation) | ~15-20 min |
-| 3 months backlog | ~45-60 min |
-| 5 months backlog | ~75-100 min |
-
-**Note:** Parquet is ~30% faster than CSV
 
 ---
 
@@ -566,11 +549,12 @@ python FallRisk_Healthplans_Incremental.py --auto
 - ✓ "Input format: [PARQUET|CSV]"
 
 **Performance:**
-- ~15-20 min per month
+- ~5 min per month
 - Parquet 5x faster than CSV
 
 ---
 
-**Ready for Production!** 🚀
+**Ready for Production!** 
 
 For detailed technical information, see inline code comments in `FallRisk_Healthplans_Incremental.py`
+
