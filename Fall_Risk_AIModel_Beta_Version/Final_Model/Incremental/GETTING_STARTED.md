@@ -6,7 +6,6 @@
 
 ## Important Updates
 
-- Script path is now `FallRisk_Healthplans_Incremental.py`.
 - Incremental training generation now updates roster membership:
   - Adds new members from the latest monthly real file.
   - Removes canceled members not present in that monthly file.
