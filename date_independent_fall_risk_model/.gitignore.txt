@@ -1,0 +1,42 @@
+# Python cache / bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Build / packaging artifacts
+build/
+dist/
+*.egg-info/
+
+# Jupyter / notebook
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Model artifacts
+*.pkl
+*.joblib
+
+# Data files (keep schema docs, ignore heavy datasets)
+*.parquet
+*.csv
+*.xlsx
+*.xls
+
+# Generated outputs
+outputs/
+reports/
+artifacts/
+FallRisk_6m_Training_Output*/
+
+# Logs
+*.log
