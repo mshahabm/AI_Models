@@ -1,0 +1,115 @@
+Static data columns:
+
+# account_number: Unique identifier for the customer.
+# account_id: Another unique account identifier, from Salesforce - required by end user.
+# brand: The name/type of account record, Medicaid Customer 
+# health_plan: The associated health plan or acquisition partner 
+
+Feature columns:
+
+# sentiment_positive_count: Number of positive sentiment operator notes in the month.
+# sentiment_negative_count: Number of negative sentiment operator notes in the month
+# sentiment_neutral_count: Number of neutral sentiment operator notes in the month.
+# assist_count: Count of Assist alarms in the month
+# fall_count: Count of Fall alarms in the month 
+# subscriber_reached_count: Number of times the subscriber was reached in the month
+# help_sent_count: Number of alarms where help was sent in the month
+# dispatch_cancelled_count: Number of times a dispatch was cancelled in the month.
+# fall_alarm_count: Total number of fall alarms (from alarms data).
+# button_press_count: Total number of button presses during the month.
+# er_dispatch_count: Count of ER/emergency dispatches for the month.
+# avg_daily_steps: Average daily steps for the observation month.
+
+
+_____________________________________________________________________________________________________________________________________________
+
+
+• We transformed monthly member activity into consistent risk indicators that summarize behavior, mobility, sentiment, and intervention history over rolling time windows.
+• The model now uses these aggregated signals to identify members with rising fall risk while reducing noise from month-to-month fluctuations.
+• We separated training and scoring outputs so model development remains controlled and production scoring stays clean and reliable.
+• Each monthly run can be repeated with the same logic, creating stable reports and easier comparison of performance over time.
+• This gives the business a scalable, governance-ready process to monitor risk, prioritize outreach, and refresh models as member behavior changes.
+
+
+
+based features: 
+
+• assist_count_sum: Total assist events in the selected period; captures overall assistance burden.
+• assist_count_mean: Average assist counts per month in the period; normalizes burden by window length.
+• assist_count_max: Highest monthly assist count in the period; highlights peak-intensity months.
+• assist_count_last_value: Most recent month’s assist count; reflects current assist need.
+• assist_count_trend: Change from oldest to most recent month for assist count; positive means rising assist burden.
+
+• fall_alarm_count_sum: Total fall alarms in the period; direct indicator of cumulative fall-related risk events.
+• fall_alarm_count_mean: Average monthly fall alarms; smooths spikes and shows sustained alarm level.
+• fall_alarm_count_max: Maximum monthly fall alarms; captures worst observed alarm month.
+• fall_alarm_count_last_value: Most recent month’s fall alarms; strongest recency signal for current risk.
+• fall_alarm_count_trend: Oldest-to-latest change in fall alarms; increasing trend suggests worsening risk.
+
+• fall_count_sum: Total confirmed falls across the period; strongest historical adverse-outcome burden signal.
+• fall_count_mean: Average confirmed falls per month; normalized fall burden over time.
+• fall_count_max: Peak monthly confirmed fall count; detects episodic high-risk periods.
+• fall_count_last_value: Latest month’s confirmed fall count; immediate recent outcome signal.
+• fall_count_trend: Change in confirmed falls from start to end of window; indicates improving or worsening trajectory.
+
+• er_dispatch_count_sum: Total emergency dispatches in the period; proxy for acute incidents and severity.
+• er_dispatch_count_mean: Average monthly emergency dispatches; sustained urgent-care need indicator.
+• er_dispatch_count_max: Highest monthly emergency dispatch count; captures extreme incident month.
+• er_dispatch_count_last_value: Most recent month’s emergency dispatch count; recency-weighted acuity signal.
+• er_dispatch_count_trend: Oldest-to-latest change in emergency dispatches; rising values indicate escalating risk.
+
+• button_press_count_sum: Total button presses in the period; reflects overall help-seeking/alerting behavior.
+• button_press_count_mean: Average monthly button presses; stable measure of alert frequency.
+• button_press_count_max: Maximum monthly button presses; identifies high-distress months.
+• button_press_count_last_value: Most recent month’s button presses; current engagement/distress indicator.
+• button_press_count_trend: Change in button-press activity over the window; rising trend may indicate worsening condition.
+
+• help_sent_count_sum: Total help-sent events in the period; cumulative intervention workload indicator.
+• help_sent_count_mean: Average monthly help-sent events; typical intervention frequency.
+• help_sent_count_max: Highest monthly help-sent count; peak intervention month.
+• help_sent_count_last_value: Most recent month’s help-sent events; current operational support need.
+• help_sent_count_trend: Oldest-to-latest change in help-sent events; shows increasing/decreasing intervention requirement.
+
+• subscriber_reached_count_sum: Total successful subscriber reaches; overall contactability/engagement over the period.
+• subscriber_reached_count_mean: Average monthly successful reaches; typical contact frequency.
+• subscriber_reached_count_max: Peak monthly successful reaches; identifies high-contact periods.
+• subscriber_reached_count_last_value: Most recent month’s successful reaches; current reachability context.
+• subscriber_reached_count_trend: Change in successful reaches across window; improving trend can indicate better engagement.
+
+• dispatch_cancelled_count_sum: Total cancelled dispatches; cumulative indicator of response reversals/no-transport events.
+• dispatch_cancelled_count_mean: Average monthly cancelled dispatches; normalized cancellation burden.
+• dispatch_cancelled_count_max: Highest monthly cancellations; detects operational instability spikes.
+• dispatch_cancelled_count_last_value: Most recent month’s cancellations; current cancellation behavior signal.
+• dispatch_cancelled_count_trend: Change in cancellations from oldest to newest month; rising values may indicate process friction.
+
+• avg_daily_steps_mean: Mean daily steps across the period; overall mobility/activity level.
+• avg_daily_steps_median: Median daily steps; robust central tendency less affected by outlier months.
+• avg_daily_steps_std: Standard deviation of steps; variability/instability in mobility behavior.
+• avg_daily_steps_cv: Relative variability (std/mean); compares instability independent of absolute step level.
+• avg_daily_steps_trend: Oldest-to-latest steps change; decline can indicate deteriorating mobility.
+
+• avg_daily_steps_min: Lowest monthly steps level; captures worst mobility point.
+• avg_daily_steps_last_value: Most recent month’s steps; strongest recency mobility signal.
+• avg_daily_steps_max: Highest monthly steps level; best mobility month in the period.
+• low_steps_month_ratio: Fraction of months below a low-step threshold; persistence of low mobility.
+
+• sentiment_total: Total sentiment-tagged notes (positive+neutral+negative); volume of documented interactions.
+• neg_sentiment_share: Proportion of negative notes; overall negativity burden in communication.
+• pos_sentiment_share: Proportion of positive notes; overall positivity/resilience signal.
+• sentiment_polarity: Net sentiment balance (positive-negative)/total; direction and strength of sentiment tone.
+• neg_sentiment_trend: Change in negative-note count from oldest to newest month; increasing trend may flag deterioration.
+• sentiment_available_month_ratio: Proportion of months with sentiment data present; data availability/reliability indicator.
+
+• months_since_last_fall_alarm: Number of months since the most recent fall alarm; recency of alarm events.
+• months_since_last_fall: Number of months since the most recent confirmed fall; recency of adverse outcomes.
+• had_any_fall_alarm: Binary flag indicating at least one fall alarm in the window; quick risk-history marker.
+• had_any_er_dispatch: Binary flag for any emergency dispatch in the window; quick acuity-history marker.
+• fall_alarm_to_assist_ratio: Ratio of fall alarms to assist events; mix of incident-type burden vs general assists.
+• er_dispatch_to_fall_alarm_ratio: Ratio of emergency dispatches to fall alarms; severity/progression proxy among fall-alarm events.
+• dispatch_cancelled_rate: Share of dispatch activity that gets cancelled; operational conversion/efficiency indicator.
+• button_press_to_fall_alarm_ratio: Ratio of button presses to fall alarms; contrast between help-seeking frequency and fall-alarm frequency.
+• help_to_reached_ratio: Ratio of help-sent events to successful reaches; intervention intensity relative to contact success.
+• data_completeness: Fraction of expected metric-month cells populated; overall feature-data quality score.
+• months_present: Count of months with at least one non-null metric; temporal coverage of member history.
+• active_months: Count of months with non-zero activity in key operational/event metrics; behavioral activity persistence.
+• all_zero_activity_flag: Binary flag for no activity across key metrics in the entire window; identifies dormant/no-signal members.
