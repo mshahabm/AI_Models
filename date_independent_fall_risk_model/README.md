@@ -1,80 +1,130 @@
-# Fall Risk Date-Independent Model (6M Rollover)
+# Fall Risk Modeling Pipeline (12-Month Rollover)
 
-This folder documents and packages the **date-independent fall-risk pipeline** using three scripts:
+## Overview
+This project implements an end-to-end fall risk prediction pipeline that transforms raw longitudinal member data into actionable risk scores.
+The workflow is designed to handle real-world healthcare data challenges such as temporal variability, missing values, and class imbalance.
+The pipeline consists of three core stages:
+* Feature Engineering – Transform raw monthly data into structured temporal features
+* Model Training & Validation – Train a supervised model to predict next-month fall risk
+* Inference & Scoring – Generate risk scores and categories for new data
 
-1. `fall_risk_feature_engineering.py`  
-   Generates engineered features from wide/long monthly source data, with optional target creation.
-2. `fall_risk_training_6m.py`  
-   Trains and validates a 6-month model and saves a `.pkl` artifact.
-3. `fall_Risk_score_6m.py`  
-   Loads the trained model and scores next-month member fall risk.
-
----
-
-## Pipeline Overview
-
-### Step 1: Feature Engineering
-
-- Input: `202411_to_202602_base_features.parquet` (or csv/xlsx/xls supported by script)
-- Detects monthly columns dynamically and builds rolling-window features
-- Outputs separate window files for fair model comparison:
-  - `fall_risk_features_last_6m.parquet`
-  - `fall_risk_features_last_4m.parquet`
-  - `fall_risk_features_last_3m.parquet`
-- Optional target column:
-  - `target_fall_next_month` (for training dataset)
-
-### Step 2: Training (6M)
-
-- Input: engineered **6m** feature file with target
-- Splits labeled data with stratified validation
-- Trains via `FallRiskForecastingModel` (from `FallRisk_Healthplans_Incremental.py`)
-- Selects validation threshold with FPR/FNR caps
-- Saves:
-  - model `.pkl`
-  - validation plots and summary artifacts
-
-### Step 3: Scoring (6M)
-
-- Input: engineered **6m** feature file without target + model `.pkl`
-- Produces compact report:
-  - `account_number`
-  - `Risk_Score` (1..10)
-  - `Risk_Category` (Low/Medium/High)
+### High-Level Workflow
+Raw Monthly Data → Feature Engineering (12-Month Window) → Model Training → Saved Model → Inference → Risk Scores & Categories
 
 ---
 
-## Recommended Project Layout
+## 1. Feature Engineering (fall_risk_feature_engineering.py)
 
-```text
-fall_risk_date_independent_model/
-  fall_risk_feature_engineering.py
-  fall_risk_training_6m.py
-  fall_Risk_score_6m.py
-  FallRisk_Healthplans_Incremental.py
-  requirements.txt
-  .gitignore.txt
-  GETTING_STARTED.md
-  README.md
-  outputs/
-```
+### Purpose
+Transforms raw member-level data into model-ready features using a rolling time window (e.g., last 12 months).
 
----
-
-## Key Run Commands
-
-See `GETTING_STARTED.md` for full commands. Typical sequence:
-
-1. Generate features with target (`--include_target`)
-2. Train model from `fall_risk_features_last_6m_with_target.parquet`
-3. Generate features without target
-4. Score using `fall_Risk_score_6m.py`
+### Key Capabilities
+* **Flexible Input Handling**
+* Supports .parquet, .csv, .xlsx
+* Automatically detects:
+* Wide format (metric_MM_YYYY)
+* Long format (obs_month) and converts to wide
+* **Temporal Windowing**
+* Builds features over configurable windows (e.g., 9, 12 months)
+* Uses latest month (or custom anchor) as reference point
+* **Feature Types**
+* Event Trends (e.g., fall_count trend)
+* Time-Lag Features (T-1, T-2, … per metric)
+* Mobility Signals (steps trend, low activity ratio)
+* Sentiment Signals (positive/negative/neutral counts)
+* Data Quality Metrics (completeness, sparsity)
+* Behavioral Activity Patterns
+* **Target Generation (Optional)**
+* Creates target_fall_next_month based on next month's fall count
 
 ---
 
-## Notes
+## 2. Model Training (fall_risk_training_12m.py)
 
-- Keep training and scoring feature generation separate to avoid label leakage.
-- Use consistent `predict_month` between model thresholding and score-time threshold lookup.
-- If file names are provided without extensions, scripts may auto-detect parquet/csv variants.
-- Keep large data/model artifacts out of source control (`.gitignore.txt` covers this).
+### Purpose
+Trains a supervised model to predict probability of a fall in the next month.
+
+### Key Components
+* **Automatic Feature Selection**
+* Excludes identifiers and target column
+* **Data Preparation**
+* Drops rows with missing target values (unlabeled data)
+* Ensures binary target (0/1)
+* **Train / Validation Split**
+* Uses Stratified Shuffle Split to preserve class balance
+* **Model Options**
+* XGBoost (default)
+* Random Forest
+* Gradient Boosting
+* Logistic Regression
+* **Adaptive Threshold Optimization**
+* Selects optimal decision threshold based on:
+* False Positive Rate (FPR)
+* False Negative Rate (FNR)
+* Uses weighted tradeoff to avoid extreme bias
+* **Evaluation Metrics**
+* ROC-AUC
+* Precision / Recall
+* Confusion Matrix
+* Threshold diagnostics
+* **Outputs**
+* Trained model: fall_risk_model_6m.pkl
+* Validation artifacts:
+* ROC curve
+* Confusion matrix (image + text)
+* Performance report
+* Training metadata
+
+---
+
+## 3. Inference & Scoring (fall_Risk_score_12m.py)
+
+### Purpose
+Applies the trained model to new data and generates interpretable risk scores.
+
+### Key Features
+* **Model Loading**
+* Loads pre-trained model artifact (.pkl)
+* **Probability Prediction**
+* Predicts fall probability for each member
+* **Adaptive Thresholding**
+* Uses month-specific threshold from training
+* **Score Mapping (1–10 Scale)**
+* Converts probabilities into risk scores using percentile ranking:
+* Low Risk: 1–2
+* Medium Risk: 3–6
+* High Risk: 7–10
+* **Risk Categorization**
+* Maps numeric score to:
+* Low
+* Medium
+* High
+* **Outputs**
+* Final report:
+
+---
+
+## Key Design Principles
+* **✅ Temporal Awareness**
+* Uses rolling windows to capture recent behavioral patterns
+* **✅ Robust Feature Engineering**
+* Combines:
+* Trends
+* Recency signals
+* Activity levels
+* Data completeness
+* **✅ Controlled Decision Thresholds**
+* Explicitly balances false positives vs false negatives
+* **✅ Separation of Concerns**
+* Feature engineering, training, and inference are modular
+* **✅ Production-Ready**
+* Supports:
+* Multiple file formats
+* Automated file detection
+* Scalable pipelines
+
+---
+
+## Summary
+This pipeline provides a robust, scalable, and interpretable framework for predicting fall risk using longitudinal data.
+By combining temporal feature engineering, controlled model training, and adaptive scoring, it delivers reliable risk stratification suitable for real-world healthcare applications.

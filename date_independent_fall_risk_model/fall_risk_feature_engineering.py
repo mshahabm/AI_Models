@@ -411,31 +411,38 @@ def build_features(
         mdf = _safe_series(df, cols, fill_value=None)
 
         suffix = f"_last_{window_months}m"
-        out[f"{metric}_sum{suffix}"] = mdf.sum(axis=1, min_count=1)
-        out[f"{metric}_mean{suffix}"] = mdf.mean(axis=1)
-        out[f"{metric}_max{suffix}"] = mdf.max(axis=1)
-        out[f"{metric}_last_value{suffix}"] = mdf.iloc[:, -1] if not mdf.empty else np.nan
+        #out[f"{metric}_sum{suffix}"] = mdf.sum(axis=1, min_count=1)
+        #out[f"{metric}_mean{suffix}"] = mdf.mean(axis=1)
+        #out[f"{metric}_max{suffix}"] = mdf.max(axis=1)
+        #out[f"{metric}_last_value{suffix}"] = mdf.iloc[:, -1] if not mdf.empty else np.nan
         out[f"{metric}_trend{suffix}"] = (
             (mdf.iloc[:, -1] - mdf.iloc[:, 0]) if mdf.shape[1] >= 2 else np.nan
         )
+        for i,col in enumerate(mdf.columns):
+            j = i + 1
+            out[f'{col[:-7]}T-{j}m'] = mdf[col]
 
     # ---- Mobility features ----
     steps_cols = [month_map[m.key].get("avg_daily_steps") for m in selected if "avg_daily_steps" in month_map[m.key]]
     steps_cols = [c for c in steps_cols if c is not None]
     steps_df = _safe_series(df, steps_cols, fill_value=None)
     suffix = f"_last_{window_months}m"
-    out[f"avg_daily_steps_mean{suffix}"] = steps_df.mean(axis=1)
-    out[f"avg_daily_steps_median{suffix}"] = steps_df.median(axis=1)
-    out[f"avg_daily_steps_std{suffix}"] = steps_df.std(axis=1, ddof=0)
-    out[f"avg_daily_steps_cv{suffix}"] = out[f"avg_daily_steps_std{suffix}"] / (
-        out[f"avg_daily_steps_mean{suffix}"] + EPS
-    )
+    #out[f"avg_daily_steps_mean{suffix}"] = steps_df.mean(axis=1)
+    #out[f"avg_daily_steps_median{suffix}"] = steps_df.median(axis=1)
+    #out[f"avg_daily_steps_std{suffix}"] = steps_df.std(axis=1, ddof=0)
+    #out[f"avg_daily_steps_cv{suffix}"] = out[f"avg_daily_steps_std{suffix}"] / (
+        #out[f"avg_daily_steps_mean{suffix}"] + EPS
+    #)
     out[f"avg_daily_steps_trend{suffix}"] = (
         (steps_df.iloc[:, -1] - steps_df.iloc[:, 0]) if steps_df.shape[1] >= 2 else np.nan
     )
-    out[f"avg_daily_steps_min{suffix}"] = steps_df.min(axis=1)
-    out[f"avg_daily_steps_last_value{suffix}"] = steps_df.iloc[:, -1] if not steps_df.empty else np.nan
-    out[f"avg_daily_steps_max{suffix}"] = steps_df.max(axis=1)
+    #out[f"avg_daily_steps_min{suffix}"] = steps_df.min(axis=1)
+    #out[f"avg_daily_steps_last_value{suffix}"] = steps_df.iloc[:, -1] if not steps_df.empty else np.nan
+    #out[f"avg_daily_steps_max{suffix}"] = steps_df.max(axis=1)
+    for i, col in enumerate(steps_df.columns):
+        j = i + 1
+        out[f'{col[:-7]}T-{j}m'] = steps_df[col]
+        
     if not steps_df.empty:
         nonnull_steps = steps_df.notna().sum(axis=1)
         low_steps = ((steps_df < LOW_STEPS_THRESHOLD) & steps_df.notna()).sum(axis=1)
@@ -463,18 +470,33 @@ def build_features(
     pos_df = pos_raw
     neu_df = neu_raw
 
-    neg_sum = neg_df.sum(axis=1, min_count=1)
-    pos_sum = pos_df.sum(axis=1, min_count=1)
-    neu_sum = neu_df.sum(axis=1, min_count=1)
-    sentiment_total = neg_sum + pos_sum + neu_sum
+    #neg_sum = neg_df.sum(axis=1, min_count=1)
+    #pos_sum = pos_df.sum(axis=1, min_count=1)
+    #neu_sum = neu_df.sum(axis=1, min_count=1)
+    #sentiment_total = neg_sum + pos_sum + neu_sum
 
-    out[f"sentiment_total{suffix}"] = sentiment_total
-    out[f"neg_sentiment_share{suffix}"] = neg_sum / (sentiment_total + EPS)
-    out[f"pos_sentiment_share{suffix}"] = pos_sum / (sentiment_total + EPS)
-    out[f"sentiment_polarity{suffix}"] = (pos_sum - neg_sum) / (sentiment_total + EPS)
-    out[f"neg_sentiment_trend{suffix}"] = (
-        (neg_df.iloc[:, -1] - neg_df.iloc[:, 0]) if neg_df.shape[1] >= 2 else 0.0
-    )
+    #out[f"sentiment_total{suffix}"] = sentiment_total
+    #out[f"neg_sentiment_share{suffix}"] = neg_sum / (sentiment_total + EPS)
+    #out[f"pos_sentiment_share{suffix}"] = pos_sum / (sentiment_total + EPS)
+    #out[f"sentiment_polarity{suffix}"] = (pos_sum - neg_sum) / (sentiment_total + EPS)
+    #out[f"neg_sentiment_trend{suffix}"] = (
+        #(neg_df.iloc[:, -1] - neg_df.iloc[:, 0]) if neg_df.shape[1] >= 2 else 0.0
+    #)
+    if not neg_df.empty:
+        for i, col in enumerate(neg_df.columns):
+            j = i + 1
+            out[f'{col[:-7]}T-{j}m'] = neg_df[col]
+    
+    if not pos_df.empty:
+        for i, col in enumerate(pos_df.columns):
+            j = i + 1
+            out[f'{col[:-7]}T-{j}m'] = pos_df[col]
+
+    if not neu_df.empty:
+        for i, col in enumerate(neu_df.columns):
+            j = i + 1
+            out[f'{col[:-7]}T-{j}m'] = neu_df[col]
+
 
     if selected:
         availability_count = pd.Series(0, index=df.index, dtype=float)
@@ -512,28 +534,28 @@ def build_features(
         result = np.where(has_any_data, result, np.nan)
         return pd.Series(result, index=df.index, dtype=float)
 
-    months_since_fall_alarm = months_since_last_nonzero("fall_alarm_count")
-    months_since_fall = months_since_last_nonzero("fall_count")
-    fall_alarm_sum = out[f"fall_alarm_count_sum{suffix}"]
-    er_dispatch_sum = out[f"er_dispatch_count_sum{suffix}"]
+    #months_since_fall_alarm = months_since_last_nonzero("fall_alarm_count")
+    #months_since_fall = months_since_last_nonzero("fall_count")
+    #fall_alarm_sum = out[f"fall_alarm_count_sum{suffix}"]
+    #er_dispatch_sum = out[f"er_dispatch_count_sum{suffix}"]
 
-    out[f"months_since_last_fall_alarm{suffix}"] = months_since_fall_alarm
-    out[f"months_since_last_fall{suffix}"] = months_since_fall
-    out[f"had_any_fall_alarm{suffix}"] = (fall_alarm_sum > 0).astype(np.int8)
-    out[f"had_any_er_dispatch{suffix}"] = (er_dispatch_sum > 0).astype(np.int8)
+    #out[f"months_since_last_fall_alarm{suffix}"] = months_since_fall_alarm
+    #out[f"months_since_last_fall{suffix}"] = months_since_fall
+    #out[f"had_any_fall_alarm{suffix}"] = (fall_alarm_sum > 0).astype(np.int8)
+    #out[f"had_any_er_dispatch{suffix}"] = (er_dispatch_sum > 0).astype(np.int8)
 
     # ---- Ratios ----
-    assist_sum = out[f"assist_count_sum{suffix}"]
-    dispatch_cancel_sum = out[f"dispatch_cancelled_count_sum{suffix}"]
-    button_sum = out[f"button_press_count_sum{suffix}"]
-    help_sum = out[f"help_sent_count_sum{suffix}"]
-    reached_sum = out[f"subscriber_reached_count_sum{suffix}"]
+    #assist_sum = out[f"assist_count_sum{suffix}"]
+    #dispatch_cancel_sum = out[f"dispatch_cancelled_count_sum{suffix}"]
+    #button_sum = out[f"button_press_count_sum{suffix}"]
+    #help_sum = out[f"help_sent_count_sum{suffix}"]
+    #reached_sum = out[f"subscriber_reached_count_sum{suffix}"]
 
-    out[f"fall_alarm_to_assist_ratio{suffix}"] = fall_alarm_sum / (assist_sum + EPS)
-    out[f"er_dispatch_to_fall_alarm_ratio{suffix}"] = er_dispatch_sum / (fall_alarm_sum + EPS)
-    out[f"dispatch_cancelled_rate{suffix}"] = dispatch_cancel_sum / (er_dispatch_sum + dispatch_cancel_sum + EPS)
-    out[f"button_press_to_fall_alarm_ratio{suffix}"] = button_sum / (fall_alarm_sum + EPS)
-    out[f"help_to_reached_ratio{suffix}"] = help_sum / (reached_sum + EPS)
+    #out[f"fall_alarm_to_assist_ratio{suffix}"] = fall_alarm_sum / (assist_sum + EPS)
+    #out[f"er_dispatch_to_fall_alarm_ratio{suffix}"] = er_dispatch_sum / (fall_alarm_sum + EPS)
+    #out[f"dispatch_cancelled_rate{suffix}"] = dispatch_cancel_sum / (er_dispatch_sum + dispatch_cancel_sum + EPS)
+    #out[f"button_press_to_fall_alarm_ratio{suffix}"] = button_sum / (fall_alarm_sum + EPS)
+    #out[f"help_to_reached_ratio{suffix}"] = help_sum / (reached_sum + EPS)
 
     # ---- Data quality / sparsity ----
     metric_month_columns: List[str] = []
