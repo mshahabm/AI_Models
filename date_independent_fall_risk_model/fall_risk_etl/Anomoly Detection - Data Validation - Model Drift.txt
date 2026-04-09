@@ -1,0 +1,128 @@
+Anomoly Detection & Data Validation
+
+
+Check for Anomalies
+
+Three Step
+
+1) Operator Notes
+
+# Add something here
+
+2) Final Data Ingestion
+	1. Check for Negative Values
+	2. Check for IQR to be less than 0.75
+
+
+How to Handle Anomalies
+
+# Discuss this with the team
+
+1) Drop Rows.
+2) Inform related departments.
+
+
+Run a Data schema Validation
+
+1) Make sure we have all the columns.
+2) Check all the Datatypes.
+
+
+
+Model Drift
+
+Current Model Work Flow
+
+Detect Latest Training File -> predict for month + 1 -> get actual data set -> Perform model evaluation -> Create new Training file with month + 1
+
+This cycle will run every month
+
+Types of Model Drifts & How to detect them
+
+1) Concept Drift
+
+The relationship between inputs and target changes.
+Example: Features that used to predict churn well no longer do.
+	
+	Detection:
+	Detect by monitoring model performance over time.
+
+	Sudden drops in accuracy, AUC, RMSE, precision/recall.
+	Use drift detectors:
+
+	DDM (Drift Detection Method)
+	EDDM (Early Drift Detection Method)
+	ADWIN (Adaptive Windowing)
+
+
+	Compare recent vs. historic feature→target relationships.
+
+2) Label Drift
+
+The distribution of the target variable changes.
+Example: Fraud rate increases from 1% → 5%
+	
+	Detection:
+	Detect by checking if the target distribution changes.
+
+	Compare old vs new label frequencies
+	Chi-square test for proportions
+	PSI on target variable
+	
+3) Feature Drift
+
+data types
+feature meaning
+units (e.g., price changes from USD → EUR)
+missing value patterns
+new features added or removed
+	
+	Detection:
+	Detect by monitoring:
+
+	Data types
+	Missing rates
+	Value ranges
+	Unexpected categorical values
+	Unit/scale changes
+
+4) Prediction Drift
+
+Model output distribution shifts over time.
+Example: Model starts predicting “no churn” much more often than before.
+	
+	Detection:
+	Compare the distribution of model outputs over time.
+
+	PSI on predictions
+	KL divergence
+	Plot prediction histograms (current vs. baseline)
+
+5) Concept Evolution
+
+New classes or behaviors appear.
+Example: A new type of fraud emerges that the model hasn’t seen before
+
+	Detection:
+	Detect by identifying new clusters or unseen patterns.
+
+	Clustering (DBSCAN, k-means drift)
+	Novelty detection (Isolation Forest, One-Class SVM)
+	High residual segments in supervised tasks
+
+
+Which of these are applicable to Fall Risk Model:
+
+1) Concept Drift - Applicable
+2) Label Drifts - Applicable
+3) Feature Drifts - Not Applicable Since we already have a validation layer and the features currently in use cannot have a change in meaning
+4) Prediction Drifts - Not Applicable Since we already have considered Label Drifts and we are labeling the rows rather than predicting
+5) Concept Drifts - Not Applicable since we are retraining the model every month
+
+
+Plan of Action:
+
+Create Validation Layer for Model that would also incorporate anomaly detection. 
+Create prediction distribution Monitoring pipeline.
+Create Monitoring pipeline for evaluation metrices and have work flows in place if there's a lot of deviation.
+

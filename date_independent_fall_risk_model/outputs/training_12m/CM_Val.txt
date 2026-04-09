@@ -1,0 +1,20 @@
+================================================================================
+CONFUSION MATRIX - VALIDATION 6M 03_2026
+================================================================================
+
+                               Predicted: No Fall   Predicted: Fall     
+Actual: No Fall                                 120                   52
+Actual: Fall                                     12                    5
+
+METRICS:
+--------------------------------------------------------------------------------
+Accuracy       : 0.6614
+Precision      : 0.0877
+Recall         : 0.2941
+F1             : 0.1351
+FPR            : 0.3023
+FNR            : 0.7059
+
+INTERPRETATION:
+False Positives: 52 unnecessary interventions (30.2%)
+False Negatives: 12 missed falls (70.6%)

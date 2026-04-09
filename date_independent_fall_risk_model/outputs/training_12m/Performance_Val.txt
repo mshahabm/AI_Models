@@ -1,0 +1,18 @@
+============================================================
+PERFORMANCE SUMMARY
+============================================================
+
+Accuracy       : 0.6614
+Precision      : 0.0877
+Recall         : 0.2941
+F1-Score       : 0.1351
+ROC-AUC        : 0.4928
+
+              precision    recall  f1-score   support
+
+     No Fall       0.91      0.70      0.79       172
+        Fall       0.09      0.29      0.14        17
+
+    accuracy                           0.66       189
+   macro avg       0.50      0.50      0.46       189
+weighted avg       0.84      0.66      0.73       189

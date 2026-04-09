@@ -52,7 +52,7 @@ EVENT_METRICS = [
     "dispatch_cancelled_count",
 ]
 
-STATIC_OUTPUT_COLUMNS = ["account_number", "age"]
+STATIC_OUTPUT_COLUMNS = ["account_number", "age","account_id","health_plan","brand"]
 
 MONTH_COL_PATTERN = re.compile(r"^(?P<metric>.+)_(?P<month>\d{2})_(?P<year>\d{4})$")
 LATEST_FILE_PATTERN = re.compile(
@@ -133,6 +133,9 @@ def _convert_long_to_wide(df: pd.DataFrame) -> pd.DataFrame:
 
     out = pd.DataFrame({"account_number": account_order})
     out["age"] = out["account_number"].map(latest_age).fillna(0)
+    out["account_id"] = out["account_number"].map(df.groupby("account_number")["account_id"].first())
+    out["health_plan"] = out["account_number"].map(df.groupby("account_number")["health_plan"].first())
+    out["brand"] = out["account_number"].map(df.groupby("account_number")["brand"].first())
 
     for metric in MONTHLY_METRICS:
         if metric not in work.columns:
@@ -403,6 +406,9 @@ def build_features(
     out = pd.DataFrame(index=df.index)
     out["account_number"] = df["account_number"]
     out["age"] = pd.to_numeric(df["age"], errors="coerce")
+    out["account_id"] = df["account_id"]
+    out["health_plan"] = df["health_plan"]
+    out["brand"] = df["brand"]
 
     # ---- Event burden features ----
     for metric in EVENT_METRICS:
@@ -698,7 +704,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Feature engineering for fall-risk rollover windows.")
     parser.add_argument(
         "--input_file",
-        default="202411_to_202602_base_features.parquet",
+        default="202501_to_202603_health.parquet",
         help=(
             "Path to wide monthly input file (.parquet/.xlsx/.xls/.csv). "
             "Use 'auto' to detect latest fall_risk_feature_MM_YYYY file."

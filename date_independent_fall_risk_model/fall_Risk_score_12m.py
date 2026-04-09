@@ -136,7 +136,13 @@ def build_report(
     report_df = pd.DataFrame(
         {
             "account_number": df["account_number"].astype(str).str.strip(),
-            "Risk_Score": risk_scores.values,
+            "account_id": df["account_id"],
+            "age": df["age"],
+            "brand": df["brand"],
+            "health_plan": df["health_plan"],
+            "member name": df.get("member name",''),
+            "care manager": df.get("care_manager",''),
+            "Risk_Score": risk_scores.values
         }
     )
     report_df["Risk_Category"] = report_df["Risk_Score"].apply(get_risk_category)
@@ -175,6 +181,12 @@ def parse_args() -> argparse.Namespace:
         type=str,
         default="Fall_Risk_score_052025_6m.parquet",
         help="Output report path (.parquet or .csv).",
+    )
+    parser.add_argument(
+        "--etl_file",
+        type=str,
+        default="202501_to_202603_health.parquet",
+        help="(Optional) Path to raw health data for on-the-fly feature engineering."
     )
     return parser.parse_args()
 
